@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:nursemate_partner/screens/auth/auth_choice.dart';
+import 'package:nursemate_partner/screens/auth/login.dart';
+// Make sure the class in auth_choice.dart is named AuthChoice, not Authchoice
 
 void main() {
   runApp(const MyApp());
@@ -14,67 +18,26 @@ class MyApp extends StatelessWidget {
       title: 'NurseMate-Partner',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
+        fontFamily: 'poppins',
+        textTheme: GoogleFonts.poppinsTextTheme()
+            .apply(bodyColor: Colors.black, displayColor: Colors.black)
+            .copyWith(
+              bodyLarge: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+              bodyMedium: GoogleFonts.poppins(fontWeight: FontWeight.w400),
+              bodySmall: GoogleFonts.poppins(fontWeight: FontWeight.w300),
+              titleLarge: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+              titleMedium: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+              titleSmall: GoogleFonts.poppins(fontWeight: FontWeight.w300),
+              // Add more if needed
+            ),
+
+        scaffoldBackgroundColor: Colors.grey.shade50,
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromARGB(255, 255, 255, 255),
         ),
       ),
-      home: Authchoice(),
-    );
-  }
-}
 
-class Authchoice extends StatelessWidget {
-  const Authchoice({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          spacing: 20,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(
-                16,
-              ), // Adjust the radius as needed
-              child: Image.asset(
-                'images/auth.png',
-                width: 180,
-                height: 170,
-                fit: BoxFit.cover,
-              ),
-            ),
-            TextButton(
-              onPressed: () => (),
-              style: TextButton.styleFrom(
-                foregroundColor: Color(0xffffffff),
-
-                backgroundColor: Color(0xff2C2C2C),
-                minimumSize: Size(140, 40),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Text("Log In"),
-            ),
-            TextButton(
-              onPressed: () => (),
-              style: TextButton.styleFrom(
-                foregroundColor: Color.fromARGB(255, 0, 0, 0),
-
-                minimumSize: Size(110, 40),
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Color(0xff2C2C2C), width: 1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Text("Register as Nurse "),
-            ),
-          ],
-        ),
-      ),
+      routes: {'/': (context) => Login()},
     );
   }
 }
