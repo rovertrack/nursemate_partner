@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "321861906915",
+    "project_id": "nursemate-partner",
+    "storage_bucket": "nursemate-partner.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321861906915:android:b5ebff1b405e17908df0d6",
+        "android_client_info": {
+          "package_name": "com.example.nursemate_partner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlpicVj7j4OejWT1_Ccf1N7X8n7jnKrD0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
