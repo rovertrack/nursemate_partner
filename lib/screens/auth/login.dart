@@ -1,8 +1,10 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nursemate_partner/screens/auth/otp.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -39,13 +41,27 @@ class _LoginState extends State<Login> {
     Future<void> sendOtp() async {
       try {
         await auth.verifyPhoneNumber(
-          phoneNumber: _phoneController.value.text,
+          phoneNumber: '+91${_phoneController.value.text}',
           verificationCompleted: (PhoneAuthCredential credential) {},
           verificationFailed: (FirebaseAuthException e) {},
-          codeSent: (String verificationId, int? resendToken) {},
+          codeSent: (String verificationId, int? resendToken) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => Otp(
+                      verificationID: verificationId,
+                      resendToken: resendToken,
+                      phone: _phoneController.text,
+                    ),
+              ),
+            );
+          },
           codeAutoRetrievalTimeout: (String verificationId) {},
         );
-      } catch (error) {}
+      } catch (error) {
+        debugPrint(error.toString());
+      }
     }
 
     return Scaffold(
@@ -192,8 +208,20 @@ class _LoginState extends State<Login> {
               onPressed:
                   (_agreedToTerms && _showButton)
                       ? () {
-                        // sendOtp();
-                        Navigator.pushNamed(context, '/otp');
+                        sendOtp();
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder:
+                        //         (context) => Otp(
+                        //           verificationID:
+                        //               '', // Pass actual verificationID if needed
+                        //           resendToken:
+                        //               null, // Pass actual resendToken if needed
+                        //           phone: _phoneController.text,
+                        //         ),
+                        //   ),
+                        // );
                       }
                       : null,
               style: ElevatedButton.styleFrom(

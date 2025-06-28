@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:otp_timer_button/otp_timer_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Otp extends StatefulWidget {
-  const Otp({super.key});
+  const Otp({
+    super.key,
+    required this.verificationID,
+    required this.resendToken,
+    this.phone,
+  });
+  final String? verificationID;
+  final String? phone;
+  final int? resendToken;
 
   @override
   State<Otp> createState() => _OtpState();
@@ -12,8 +21,36 @@ class Otp extends StatefulWidget {
 
 class _OtpState extends State<Otp> {
   bool show = false;
+  final OtpTimerButtonController controller = OtpTimerButtonController();
+  final TextEditingController pincontroller = TextEditingController();
+  bool showbutton = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    pincontroller.addListener(() {
+      setState(() {
+        showbutton = pincontroller.text.length == 6;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    Future<void> verifyOtp(String otp, String verificationId) async {
+      try {
+        final credential = PhoneAuthProvider.credential(
+          verificationId: verificationId,
+          smsCode: otp,
+        );
+        await FirebaseAuth.instance.signInWithCredential(credential);
+        Navigator.pushNamed(context, '/home');
+        // Navigate to home or show success
+      } catch (e) {
+        // Show error
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         // The back button appears automatically if possible
@@ -68,7 +105,10 @@ class _OtpState extends State<Otp> {
                   fontSize: 18,
                 ),
               ),
-              Text("OTP sent to "),
+              Text(
+                "OTP sent to ${widget.phone ?? ''}",
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+              ),
               SizedBox(height: 5),
               PinCodeTextField(
                 autoFocus: true,
@@ -95,28 +135,41 @@ class _OtpState extends State<Otp> {
                   inactiveFillColor: Colors.grey.shade200,
                   activeFillColor: Colors.white,
                 ),
-
+                controller: pincontroller,
                 keyboardType: TextInputType.number,
                 animationDuration: Duration(milliseconds: 100),
                 enableActiveFill: true,
-
-                onCompleted: (v) {
-                  print("Completed");
-                },
-                onChanged: (value) {
-                  print(value);
-                  setState(() {});
-                },
-                beforeTextPaste: (text) {
-                  print("Allowing to paste $text");
-                  //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                  //but you can show anything you want here, like your pop up saying wrong paste format or etc
-                  return true;
-                },
               ),
-              SizedBox(height: 60),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Didn't get OTP? Resend SMS in  ",
+                    style: GoogleFonts.poppins(fontSize: 14),
+                  ),
+                  OtpTimerButton(
+                    buttonType: ButtonType.text_button,
+                    controller: controller,
+                    onPressed: () {},
+                    text: Text(''),
+                    duration: 60,
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {},
+                onPressed:
+                    showbutton
+                        ? () {
+                          if (widget.verificationID != null) {
+                            verifyOtp(
+                              pincontroller.text,
+                              widget.verificationID!,
+                            );
+                          }
+                        }
+                        : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.cyan.shade600,
                   foregroundColor: Colors.white,
@@ -130,7 +183,6 @@ class _OtpState extends State<Otp> {
                   ),
                 ),
                 child: Row(
-                  spacing: 8,
                   mainAxisSize: MainAxisSize.min,
                   children: [Text("Submit")],
                 ),

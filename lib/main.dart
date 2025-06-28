@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:nursemate_partner/screens/home/home.dart';
 import 'firebase_options.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nursemate_partner/screens/auth/auth_choice.dart';
@@ -39,7 +40,6 @@ class MyApp extends StatelessWidget {
               titleLarge: GoogleFonts.poppins(fontWeight: FontWeight.w500),
               titleMedium: GoogleFonts.poppins(fontWeight: FontWeight.w500),
               titleSmall: GoogleFonts.poppins(fontWeight: FontWeight.w300),
-              // Add more if needed
             ),
 
         scaffoldBackgroundColor: Colors.grey.shade50,
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color.fromARGB(255, 255, 255, 255),
         ),
       ),
-      routes: {'/': (context) => Login(), '/otp': (context) => Otp()},
+      routes: {'/': (context) => Login(), '/home': (context) => Home()},
     );
   }
 }
